@@ -1,15 +1,78 @@
-# Reproducible Research: Peer Assessment 1
+---
+title: "Reproducible Research:Peer Assessment 1"
+output:
+  html_document:
+    keep_md: yes
+---
 
 
 ## Loading and preprocessing the data
+```{r}
+unzip("activity.zip")
+activity <- read.csv("activity.csv")
+ac <- activity[!is.na(activity$steps),]
+#write.table(ac,file="ac.csv",sep=",",row.names=FALSE)
 
-
+```
 
 ## What is mean total number of steps taken per day?
+```{r}
+totalPerDay <- aggregate(x = ac$steps, by = list(factor(ac$date)), FUN = "sum")
+colnames(totalPerDay) <- c("Date","TotalSteps")
+```
+#### Total number of steps taken per day
 
+```{r echo=TRUE}
+totalPerDay
+```
 
+```{r echo=TRUE}
+
+png(file="instructions_fig/histogram.png",width=480,height=480)
+hist(totalPerDay$TotalSteps,main ="Histogram of Total Steps Per Day", xlab="Steps",breaks=10)
+invisible(dev.off())
+
+```
+![histogram](instructions_fig/histogram.png)
+```{r}
+meanSteps <- sprintf("%0.2f",mean(totalPerDay$TotalSteps))
+medianSteps <- median(totalPerDay$TotalSteps)
+
+```
+
+###### Mean of number of steps per day : `r meanSteps`
+###### Median of number of steps per day : `r medianSteps`
 
 ## What is the average daily activity pattern?
+#### The average number of steps taken in 5-minute intervals, averaged across all days 
+```{r}
+meanPerInterval <- aggregate(x = ac$steps, by = list(factor(ac$interval)), FUN = "mean")
+# add column names
+colnames(meanPerInterval) <- c("interval","totalSteps")
+# convert interval to a numeric and split into hours and minutes
+meanPerInterval$interval <- as.numeric(as.character(meanPerInterval$interval))
+h <- as.integer(meanPerInterval$interval/100)
+m <- meanPerInterval$interval - h*100
+# calculate interval as fractional hours
+fInterval <- h+m/60
+
+```
+```{r echo=TRUE}
+png(file="instructions_fig/average.png",width=480,height=480)
+plot(fInterval,meanPerInterval$totalSteps,type='n',xlab="5-minute intervals",ylab="Average number of steps")
+lines(fInterval,meanPerInterval$totalSteps)
+invisible(dev.off())
+```
+![average](instructions_fig/average.png)
+
+#### Locate the maximum number of average steps and the interval in which it occurs
+```{r}
+maxAverageSteps <- max(meanPerInterval$totalSteps)
+maxStepsAt <- subset(meanPerInterval,subset=(meanPerInterval$totalSteps==maxAverageSteps))$interval
+
+```
+###### Max average number of steps: `r maxAverageSteps`
+###### Interval in which it occur: `r maxStepsAt` 
 
 
 
@@ -18,3 +81,5 @@
 
 
 ## Are there differences in activity patterns between weekdays and weekends?
+
+
