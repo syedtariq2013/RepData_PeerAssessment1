@@ -14,7 +14,7 @@ mean.calculation <- function (a){
     rownames(meanPerInterval) <- meanPerInterval$interval
     h <- as.integer(meanPerInterval$interval/100)
     m <- meanPerInterval$interval - h*100
-    # calculate interval as fractional hours
+    # calculate interval as fractional hours (needed to make plots uniform in time)
     fInterval <- h+m/60
     meanPerInterval <- cbind(meanPerInterval,fInterval)
     return (meanPerInterval)
@@ -129,7 +129,8 @@ meanPerInterval <- mean.calculation(ac)
 
 ```r
 png(file="figures/average.png",width=480,height=480)
-ggplot(meanPerInterval, aes(x=fInterval, y=totalSteps)) + geom_line()
+gp <- ggplot(meanPerInterval, aes(x=fInterval, y=totalSteps)) + geom_line()
+gp + xlab("Time of Day") + ggtitle("Average Daily Activity Pattern")
 # plot(meanPerInterval$fInterval,meanPerInterval$totalSteps,type='n',xlab="Time of Day",ylab="Average number of steps")
 # lines(meanPerInterval$fInterval,meanPerInterval$totalSteps)
 invisible(dev.off())
@@ -139,11 +140,11 @@ invisible(dev.off())
 #### Locate the maximum number of average steps and the interval in which it occurs
 
 ```r
-maxAverageSteps <- max(meanPerInterval$totalSteps)
+maxAverageSteps <- sprintf("%0.f",max(meanPerInterval$totalSteps))
 maxStepsAt <- subset(meanPerInterval,subset=(meanPerInterval$totalSteps==maxAverageSteps))$interval
 ```
-###### Max average number of steps: 206.1698
-###### Interval in which it occur: 835 
+###### Max average number of steps: 206
+###### Interval in which it occur:  
 
 
 
@@ -312,7 +313,7 @@ colnames(meanPerInterval.weekend)<-c("interval","steps","fInterval","dayType")
 colnames(meanPerInterval.weekday)<-c("interval","steps","fInterval","dayType")
 meanPerInterval.both <- rbind(meanPerInterval.weekday,meanPerInterval.weekend)
 png(file="figures/week.days.end.png",width=480,height=480)
-p<-ggplot(meanPerInterval.both, aes(x=fInterval, y=steps)) + geom_line()+geom_smooth(method=loess)+ggtitle("Comparison of Activites on Weekdays and Weekends")
+p<-ggplot(meanPerInterval.both, aes(x=fInterval, y=steps)) + geom_line()+geom_smooth(method=loess)+ggtitle("Comparison of Activites on Weekdays and Weekends")+xlab("Time of Day")
 p+facet_grid(dayType~.)
 
 invisible(dev.off())	
@@ -320,6 +321,6 @@ invisible(dev.off())
 ![week.comparison](figures/week.days.end.png)  
 
 #### ANALYSIS
-The comparison between activity on weekdays versus on weekends is shown in the graphs above along with the smoothed curves, It is clear that on weekdays the activity is most in the early hours (before 10:00 am) where as on weekends it is more distributed through out the day.
+The comparison between activity on weekdays versus on weekends is shown in the graphs above along with the smoothed curves, It is clear that on weekdays the activity is most in the early hours (before 10:00 am) where as on weekends it is more distributed throughout the day.
 
 
