@@ -18,7 +18,7 @@ mean.calculation <- function (a){
     rownames(meanPerInterval) <- meanPerInterval$interval
     h <- as.integer(meanPerInterval$interval/100)
     m <- meanPerInterval$interval - h*100
-    # calculate interval as fractional hours
+    # calculate interval as fractional hours (needed to make plots uniform in time)
     fInterval <- h+m/60
     meanPerInterval <- cbind(meanPerInterval,fInterval)
     return (meanPerInterval)
@@ -50,7 +50,7 @@ totalPerDay
 ```{r plotHistogram tidy:TRUE}
 
 png(file="figures/histogram.png",width=480,height=480)
-phist <- ggplot(totalPerDay, aes(x=TotalSteps)) + geom_histogram()
+phist <- ggplot(totalPerDay, aes(x=TotalSteps)) + geom_histogram(binwidth=1000)
 phist+xlab("Steps")+ggtitle("Histogram of Total Steps Per Day")
 invisible(dev.off())
 
@@ -142,7 +142,7 @@ totalPerDayi
 
 png(file="figures/histogrami.png",width=480,height=480)
 #hist(totalPerDayi$TotalSteps,main ="Histogram of Total Steps Per Day", xlab="Steps",breaks=10)
-phist <- ggplot(totalPerDayi, aes(x=TotalSteps)) + geom_histogram()
+phist <- ggplot(totalPerDayi, aes(x=TotalSteps)) + geom_histogram(binwidth=1000)
 phist+xlab("Steps")+ggtitle("Histogram of Total Steps Per Day")
 invisible(dev.off())
 

@@ -106,15 +106,8 @@ totalPerDay
 
 ```r
 png(file="figures/histogram.png",width=480,height=480)
-phist <- ggplot(totalPerDay, aes(x=TotalSteps)) + geom_histogram()
+phist <- ggplot(totalPerDay, aes(x=TotalSteps)) + geom_histogram(binwidth=1000)
 phist+xlab("Steps")+ggtitle("Histogram of Total Steps Per Day")
-```
-
-```
-## stat_bin: binwidth defaulted to range/30. Use 'binwidth = x' to adjust this.
-```
-
-```r
 invisible(dev.off())
 ```
 ![histogram](figures/histogram.png)
@@ -286,15 +279,8 @@ totalPerDayi
 ```r
 png(file="figures/histogrami.png",width=480,height=480)
 #hist(totalPerDayi$TotalSteps,main ="Histogram of Total Steps Per Day", xlab="Steps",breaks=10)
-phist <- ggplot(totalPerDayi, aes(x=TotalSteps)) + geom_histogram()
+phist <- ggplot(totalPerDayi, aes(x=TotalSteps)) + geom_histogram(binwidth=1000)
 phist+xlab("Steps")+ggtitle("Histogram of Total Steps Per Day")
-```
-
-```
-## stat_bin: binwidth defaulted to range/30. Use 'binwidth = x' to adjust this.
-```
-
-```r
 invisible(dev.off())
 ```
 ![histogram](figures/histogrami.png)
