@@ -200,6 +200,9 @@ nNa &lt;- length(naindex)</code></pre>
 </div>
 <div id="create-data-frame-with-imputed-missing-values" class="section level4">
 <h4>Create data frame with imputed missing values</h4>
+<div id="imputing-strategy" class="section level6">
+<h6>Imputing strategy</h6>
+<p>Replace NA with the mean value of the corresponding 5 minute slot</p>
 <pre class="r"><code># Copied from post: https://class.coursera.org/repdata-004/forum/thread?thread_id=82
 # Thank You, Greg Tyler
 # Function to replace NA by value from a data frame
@@ -225,6 +228,7 @@ activity.imputed &lt;- activity.imputed[order(activity.imputed$date,
 ## 184 0.15094 2012-10-01       15
 ## 245 0.07547 2012-10-01       20
 ## 306 2.09434 2012-10-01       25</code></pre>
+</div>
 </div>
 </div>
 <div id="what-is-mean-total-number-of-steps-taken-per-day-1" class="section level2">

@@ -166,6 +166,8 @@ nNa <- length(naindex)
 
 
 #### Create data frame with imputed missing values
+###### Imputing strategy
+Replace NA with the mean value of the corresponding 5 minute slot
 
 ```r
 # Copied from post: https://class.coursera.org/repdata-004/forum/thread?thread_id=82
