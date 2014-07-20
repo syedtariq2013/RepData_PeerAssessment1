@@ -21,6 +21,10 @@ mean.calculation <- function (a){
     return (meanPerInterval)
 }
 ```
+###### NOTE ON TIME SCALING  
+
+The time of day is in HH:MM format. If meanPerInterval is plotted directly agains HH:MM it results in a distortion since because of the 60 minutes. The function mean.calculation normalizes the time to fractional hours. This is only a correction needed for plotting.  
+
 ###### Read raw data
 
 ```r
@@ -49,7 +53,7 @@ print(xtable(totalPerDay), type='html')
 ```
 
 <!-- html table generated in R 3.1.1 by xtable 1.7-3 package -->
-<!-- Sun Jul 20 00:27:56 2014 -->
+<!-- Sun Jul 20 01:03:13 2014 -->
 <TABLE border=1>
 <TR> <TH>  </TH> <TH> Date </TH> <TH> TotalSteps </TH>  </TR>
   <TR> <TD align="right"> 1 </TD> <TD> 2012-10-02 </TD> <TD align="right"> 126 </TD> </TR>
@@ -137,8 +141,6 @@ meanPerInterval <- mean.calculation(ac)
 png(file="figures/average.png",width=480,height=480)
 gp <- ggplot(meanPerInterval, aes(x=fInterval, y=totalSteps)) + geom_line()
 gp + xlab("Time of Day") + ggtitle("Average Daily Activity Pattern")
-# plot(meanPerInterval$fInterval,meanPerInterval$totalSteps,type='n',xlab="Time of Day",ylab="Average number of steps")
-# lines(meanPerInterval$fInterval,meanPerInterval$totalSteps)
 invisible(dev.off())
 ```
 ![average](figures/average.png)
@@ -146,11 +148,12 @@ invisible(dev.off())
 #### Locate the maximum number of average steps and the interval in which it occurs
 
 ```r
-maxAverageSteps <- sprintf("%0.f",max(meanPerInterval$totalSteps))
+#maxAverageSteps <- sprintf("%0.f",max(meanPerInterval$totalSteps))
+maxAverageSteps <- max(meanPerInterval$totalSteps)
 maxStepsAt <- subset(meanPerInterval,subset=(meanPerInterval$totalSteps==maxAverageSteps))$interval
 ```
 ###### Max average number of steps: 206
-###### Interval in which it occur:  
+###### Interval in which it occur: 835 
 
 
 
@@ -188,13 +191,15 @@ activity.imputed <- plyr::ddply(activity[1:3], .(interval), transform,
 activity.imputed <- activity.imputed[order(activity.imputed$date,
                                            activity.imputed$interval),]
 ```
+###### First 6 rows of the activity df with imputed NA  
+
 
 ```r
 print (xtable(head(activity.imputed)),type="html")
 ```
 
 <!-- html table generated in R 3.1.1 by xtable 1.7-3 package -->
-<!-- Sun Jul 20 00:27:57 2014 -->
+<!-- Sun Jul 20 01:03:13 2014 -->
 <TABLE border=1>
 <TR> <TH>  </TH> <TH> steps </TH> <TH> date </TH> <TH> interval </TH>  </TR>
   <TR> <TD align="right"> 1 </TD> <TD align="right"> 1.72 </TD> <TD> 2012-10-01 </TD> <TD align="right">   0 </TD> </TR>
@@ -220,7 +225,7 @@ print (xtable(totalPerDayi),type='html')
 ```
 
 <!-- html table generated in R 3.1.1 by xtable 1.7-3 package -->
-<!-- Sun Jul 20 00:27:57 2014 -->
+<!-- Sun Jul 20 01:03:13 2014 -->
 <TABLE border=1>
 <TR> <TH>  </TH> <TH> Date </TH> <TH> TotalSteps </TH>  </TR>
   <TR> <TD align="right"> 1 </TD> <TD> 2012-10-01 </TD> <TD align="right"> 10766.19 </TD> </TR>
@@ -289,7 +294,6 @@ print (xtable(totalPerDayi),type='html')
 
 ```r
 png(file="figures/histogrami.png",width=480,height=480)
-#hist(totalPerDayi$TotalSteps,main ="Histogram of Total Steps Per Day", xlab="Steps",breaks=10)
 phist <- ggplot(totalPerDayi, aes(x=TotalSteps)) + geom_histogram(binwidth=1000)
 phist+xlab("Steps")+ggtitle("Histogram of Total Steps Per Day")
 invisible(dev.off())
@@ -303,7 +307,8 @@ medianStepsi <- sprintf("%0.f",median(totalPerDayi$TotalSteps))
 
 ###### Mean of number of steps per day : 10766
 ###### Median of number of steps per day : 10766
-#### ANALYSIS 
+#### ANALYSIS  
+
 No significant difference between data with NA removed and data with imputed values in place of NA 
 
 
@@ -331,6 +336,6 @@ invisible(dev.off())
 ![week.comparison](figures/week.days.end.png)  
 
 #### ANALYSIS
-The comparison between activity on weekdays versus on weekends is shown in the graphs above along with the smoothed curves, It is clear that on weekdays the activity is most in the early hours (before 10:00 am) where as on weekends it is more distributed throughout the day.
+The comparison between activity on weekdays versus on weekends is shown in the graphs above along with the smoothed curves, It is clear that on weekdays the activity is mostly in the early hours (before 10:00 am) where as on weekends it is more distributed throughout the day. The peak activity for weekdays is slightly higher than the peak for weekends althogh the times are close.
 
 
